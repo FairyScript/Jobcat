@@ -1,0 +1,20 @@
+{
+  "name": "jobcat",
+  "version": "0.0.1",
+  "description": "",
+  "scripts": {
+    "dev": "parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "rxjs": "^6.5.5"
+  },
+  "devDependencies": {
+    "@types/q": "^1.5.2",
+    "typescript": "^3.8.3"
+  }
+}
