@@ -21,16 +21,6 @@ export const jobs = {
 } as Readonly<any>
 
 export const selfBuff = {
-  //AST
-  Arrow: '放浪神之箭',
-  Balance: '太阳神之衡',
-  Bole: '世界树之干',
-  Ewer: '河流神之瓶',
-  Spear: '战争神之枪',
-  Spire: '建筑神之塔',
-  LadyOfCrowns: '王冠之贵妇',
-  LordOfCrowns: '王冠之领主',
-
   //DRG
   RightEye: '巨龙右眼',
 
@@ -48,6 +38,14 @@ export const bossDebuff = {
 
 export const teamBuff = {
   //AST
+  Arrow: '放浪神之箭',
+  Balance: '太阳神之衡',
+  Bole: '世界树之干',
+  Ewer: '河流神之瓶',
+  Spear: '战争神之枪',
+  Spire: '建筑神之塔',
+  LadyOfCrowns: '王冠之贵妇',
+  LordOfCrowns: '王冠之领主',
   Divination: '占卜',
   //DRG
   BattleLitany: '战斗连祷',

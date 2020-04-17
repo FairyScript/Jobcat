@@ -1,20 +1,20 @@
 import { Subject } from "rxjs";
-import { LogType } from "./Def";
+import { LogType } from "../resources/global";
 
-const LogSubject = new Subject<{type: string,content: string[]}>();
-let primaryPlayer;
+const LogSubject = new Subject<{type: number,content: string[]}>();
+let primaryPlayer:number;
 addOverlayListener('ChangePrimaryPlayer', (data: any) => {
-  primaryPlayer = data.charID.toString(16).toUpperCase();
+  primaryPlayer = data.charID;
   console.log(primaryPlayer);
 })
 
 addOverlayListener('LogLine', (data: any) => {
-  if (data.line[0] !== LogType.ACTInfo) {
-    //console.log(Buff(data.line));
+  const opcode = Number(data.line[0]);
+  if (opcode !== LogType.ACTInfo) {
     console.log(data.line);
 
     LogSubject.next({
-      type: data.line[0],
+      type: opcode,
       content: data.line
     });
   }
