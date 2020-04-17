@@ -1,10 +1,7 @@
-import React, { useEffect } from "react";
-import { filter } from "rxjs/operators";
+import React from "react";
 
-import { LogSubject } from "../api/Adapter";
-import { LogType } from "../api/Def";
-import { TeamBuffBar } from "./TeamBuffBar";
-import { StatusBar } from "./StatusBar";
+import { BuffBar } from "./TeamBuffBar";
+import { teamBuffSub, dotSub } from "../api/Adapter";
 
 const LangContext = React.createContext('cn');
 
@@ -14,8 +11,8 @@ export function MainPage(params) {
     <div>
       <h1>HELLO!</h1>
       <LangContext.Provider value='cn'>
-        <TeamBuffBar />
-        <StatusBar />
+        <BuffBar label="DoT:" source={dotSub} />
+        <BuffBar label="团辅:" source={teamBuffSub}/>
       </LangContext.Provider>
     </div>
   );

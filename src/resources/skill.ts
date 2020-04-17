@@ -29,17 +29,22 @@ export enum selfBuff {
   Firestarter = 0xa5,
 }
 
-export enum bossDebuff {
+export enum enemyDebuff {
   //SCH
   ChainStratagem = 0x04c5,
   //NIN
   IncreasesDamage = '受伤加重',
 }
 
+//eg: DoTs
+export enum enemyDebuffBySelf {
+  Dim = 0x74f
+}
+
 export enum teamBuff {
   //AST
   Arrow = 0x75c,
-  Balance = 0x53a,
+  Balance = 0x75a,
   Bole = 0x75b,
   Ewer = 0x75e,
   Spear = 0x75d,
@@ -48,23 +53,25 @@ export enum teamBuff {
   LordOfCrowns = 0x754,
   Divination = 0x756,
   //DRG
-  /*BattleLitany: 0x312,
-  LeftEye: 0x4a0,
+  BattleLitany = 0x312,
+  LeftEye = 0x4a0,
   //MNK
-  Brotherhood: 0x49e,
+  Brotherhood = 0x49e,
 
   //BRD
+  /*
   BattleVoice: '战斗之声',
   Ballad: '贤者的叙事谣',
   Paeon: '军神的赞美歌',
   Minuet: '放浪神的小步舞曲',
+  */
   //DNC
   StandardFinish = 0x71d,
   TechnicalFinish = 0x71e,
   Devilment = 0x721,
   Esprit1 = 0x737, //标准伶俐
   Esprit2 = 0x738,//技巧伶俐
-  */
+  
   //RDM
   Embolden = 0x4d7,
   //SMN

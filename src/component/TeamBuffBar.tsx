@@ -1,67 +1,54 @@
-import React from 'react';
-import { LogSubject,primaryPlayer } from '../api/Adapter';
-import { filter, map } from 'rxjs/operators';
-import { Buff } from '../api/Def';
+import React, { useEffect, useReducer } from 'react';
 import { BuffItem } from './BuffItem';
-import { Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { LogType } from '../resources/global';
-import { teamBuff } from '../resources/skill';
+import { Buff } from '../api/Def';
 
+function reducer(state: { [key: string]: any }, data: Buff) {
+  const uid = `${data.encounterId}${data.skillId}`;
 
-const buff = LogSubject.pipe(
-  filter(({ type }) => type === LogType.GainEffect || type === LogType.LoseEffect),
-  map(val => new Buff(val.content)),
-);
-
-interface StateProps{
-  subHandle: Subscription|undefined,
-  items: any
-}
-class TeamBuffBar extends React.Component<any,StateProps> {
-  constructor(props:any) {
-    super(props);
-    this.state = {
-      subHandle: undefined,
-      items: {}
-    };
+  switch (data.type) {
+    case LogType.GainEffect:
+      return {
+        ...state, [uid]: (
+          <BuffItem key={Date.now()}
+            name={data.skillName}
+            duration={Date.now() + data.duration * 1000}
+          />
+        )
+      };
+    case LogType.LoseEffect: {
+      delete state[uid];
+      return Object.create(state);
+    }
+    default:
+      throw new Error();
   }
+}
 
-  componentDidMount() {
-    const handle = buff.pipe(filter(val => {
-      return teamBuff[val.skillId] !== undefined && val.encounterId === primaryPlayer
-    })).subscribe(data => {
-      console.log(data);
-      
-      const items = this.state.items;
-      const uid = `${data.combatantId}${data.skillId}`;
-      switch (data.type) {
-        case LogType.GainEffect:
-          items[uid] = (
-            <BuffItem key={Date.now()}
-              name={data.skillName}
-              duration={Date.now() + data.duration * 1000}
-            />
-          );
-          break;
+interface BuffBarProps {
+  label: string;
+  source: Observable<Buff>;
+}
+const BuffBar: React.FC<BuffBarProps> = ({ label, source }) => {
+  const [state, dispatch] = useReducer(reducer, {} as any);
+  useEffect(() => {
+    const handle = source.subscribe(data => {
+      //console.log(data);
 
-        case LogType.LoseEffect:
-          delete items[uid];
-          break;
-      }
-      //console.log(items);
-      
-      this.setState({ items });
+      dispatch(data);
+      return () => handle.unsubscribe();
     });
+  }, []);
 
-    this.setState({ subHandle: handle });
-  }
+  const tmp = Object.values(state);
+  return tmp.length > 0 ? (
+    <div>
+      {label}
+      {tmp}
+    </div>
+  )
+    : null;
+};
 
-  componentWillUnmount() {
-    this.state.subHandle?.unsubscribe();
-  }
-  render() {
-    return Object.values(this.state.items);
-  }
-}
-
-export { TeamBuffBar };
+export { BuffBar };
