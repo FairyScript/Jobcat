@@ -1,9 +1,25 @@
 
 enum LogType {
-  CastSkill = '15',
-  GainEffect = '1A',
-  LoseEffect = '1E',
-  Status = '27'
+  CastSkill = '21',
+  GainEffect = '26',
+  LoseEffect = '30',
+  ToggleBattleMode = '31',//战斗状态
+  Status = '39',
+  ACTInfo = '251',
+}
+
+class Base{
+  [key: string]: any;
+  type: string;
+  time: Date;
+  constructor(content: string[]) {
+    this.type = content[0];
+    this.time = new Date(Date.parse(content[1]));
+  }
+
+  apply(content: string[]) {
+    Object.keys(this).forEach((v, i) => this[v] = content[i]);
+  }
 }
 
 class CastSkill{
@@ -25,41 +41,22 @@ class CastSkill{
     this.encounterName = content[6];
   }
 }
+class Buff extends Base {
 
-//YOU gains the effect of 激情咏唱 from YOU for 15.00 Seconds.
-//YOU loses the effect of 激情咏唱 from YOU.
-
-class Effect{
-  type: string;
-  encounterId: string;
-  rawText: string;
-  encounterName: string;
-  skillName: string;
-  combatantName: string;
-  duration: Number;
-
+  skillId: string='';
+  skillName: string='';
+  duration: string|number='';
+  encounterId: string='';
+  encounterName: string='';
+  combatantId: string='';
+  combatantName: string = '';
+  
   constructor(content: string[]) {
-    this.type = content[0];
-    this.encounterId = content[1];
-    this.rawText = content[2];
+    super(content);
     
-    const result = this.rawText.split(' ');
-    this.encounterName = result[0];
-    this.skillName = result[5];
-    this.combatantName = result[7];
-    switch (result[1]) {
-      case 'gains':
-        this.duration = Number(result[9]);
-        break;
-    
-      case 'loses':
-        this.duration = 0;
-        break;
-      
-      default:
-        this.duration = 0;
-        break;
-    }
+    this.apply(content);
+
+    this.duration = Number(this.duration);
   }
 }
 
@@ -87,4 +84,4 @@ class Status {
   }
 }
 
-export { LogType,CastSkill, Effect,Status};
+export { LogType,CastSkill, Buff,Status};

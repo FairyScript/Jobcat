@@ -1,34 +1,25 @@
 import { Subject } from "rxjs";
-import { ParseLogLine, ParseResult } from "./Utils";
-const testUrl = 'ws://127.0.0.1:10501/OnLogLineRead';
-const LogSubject = new Subject<ParseResult>();
-let ws: WebSocket;
+import { LogType } from "./Def";
 
-function ConnectWs(url = testUrl) {
-  try {
-    ws = new WebSocket(url);
+const LogSubject = new Subject<{type: string,content: string[]}>();
+let primaryPlayer;
+addOverlayListener('ChangePrimaryPlayer', (data: any) => {
+  primaryPlayer = data.charID.toString(16).toUpperCase();
+  console.log(primaryPlayer);
+})
 
-    ws.onmessage = message => {
-      //pingpong
-      if (message.data === '.') {
-        ws.send('.');
-      }
-      else {
-        const { type, msgtype, msg } = JSON.parse(message.data)
-        if (type === 'broadcast' && msgtype === 'Chat') {
-          const log = ParseLogLine(msg);
-          if (log.type !== 'FB') {//bypass system info
-            LogSubject.next(log);
-          }
-        }
-      }
-    }
-  } catch (error) {
-    console.warn(error);
-    setTimeout(() => ConnectWs(url), 3000);
+addOverlayListener('LogLine', (data: any) => {
+  if (data.line[0] !== LogType.ACTInfo) {
+    //console.log(Buff(data.line));
+    console.log(data.line);
+
+    LogSubject.next({
+      type: data.line[0],
+      content: data.line
+    });
   }
-}
+});
 
-ConnectWs(testUrl);
+startOverlayEvents();
 
-export {LogSubject}
+export { LogSubject, primaryPlayer}
